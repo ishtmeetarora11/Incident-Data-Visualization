@@ -27,42 +27,28 @@ Open a web browser and navigate to http://127.0.0.1:5000/
 On the home page, either upload one or more PDF files containing incident data or provide one or more URLs to the PDFs.
 Click the Submit button to process the data.
 
-## Video Overview
 
-https://github.com/user-attachments/assets/34f1a6fa-f256-44a7-aa5d-9e6652887182
-
-
-
-## unredactor.py overview ( Pipeline )
+## App.py overview
 
 ### Overview
 
-The task is to predict names that have been redacted in text (represented by sequences of █ characters). The solution includes:
+This file is the main entry point for the Norman PD Incident Visualization project. It orchestrates the entire workflow, from data ingestion to visualization and feedback submission. Below is an overview of its key components:
 
--> Preprocessing the input data.
+-> Home Route (/): Type: GET and POST
 
--> Balancing the training dataset.
+-> Results Route (/results): Type: GET and POST
 
--> Vectorizing the text data into numerical features.
+## Home Route (/):
 
--> Training a logistic regression model to predict names based on the surrounding context.
+### Method: GET and POST 
 
--> Evaluating the model's performance.
+    Purpose: Displays the upload form (index.html) when accessed via GET.
+    Handles PDF uploads and URL submissions when accessed via POST.
 
--> Generating predictions for a test dataset.
-
-## Preprocessing
-
-### preprocess_context(context) 
-
-    Purpose: Replace sequences of █ characters (redacted text) in the input context with the 
-    placeholder <redacted>.
-
-    Implementation: return re.sub(r'█+', '<redacted>', str(context))
-
-    Regex Pattern r'█+': Matches one or more consecutive █ characters.
-
-    Replacement: These matched sequences are replaced with <redacted>.
+    Implementation: 
+        Data Processing:
+            Extracts PDFs from uploaded files or fetches them from URLs using fetchIncidents.
+            Uses extractIncidents to parse data and extract structured information (e.g., Date, Nature, Location)
 
 
 ### read_and_preprocess_data()
