@@ -46,9 +46,17 @@ This file is the main entry point for the Norman PD Incident Visualization proje
     Handles PDF uploads and URL submissions when accessed via POST.
 
     Implementation: 
+
         Data Processing:
             Extracts PDFs from uploaded files or fetches them from URLs using fetchIncidents.
             Uses extractIncidents to parse data and extract structured information (e.g., Date, Nature, Location)
+        
+        Error Handling:
+            Catches exceptions like invalid URLs, missing files, or extraction errors.
+            Provides detailed feedback to users through error messages.
+        
+        Redirection:
+            Redirects to /results if data is successfully processed.
 
 
 ### read_and_preprocess_data()
