@@ -27,6 +27,10 @@ Open a web browser and navigate to http://127.0.0.1:5000/
 On the home page, either upload one or more PDF files containing incident data or provide one or more URLs to the PDFs.
 Click the Submit button to process the data.
 
+## Link to Video Describing the Project
+
+https://drive.google.com/file/d/1TT0ih-Rcx53pgkc8-sdfQAB8DYOBkj3n/view?usp=drive_link
+
 
 ## App.py overview
 
