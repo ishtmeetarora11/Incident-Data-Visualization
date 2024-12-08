@@ -59,175 +59,78 @@ This file is the main entry point for the Norman PD Incident Visualization proje
             Redirects to /results if data is successfully processed.
 
 
-### read_and_preprocess_data()
+## Results Route (/results):
 
-    Purpose: Reads the unredactor.tsv dataset and preprocesses the text contexts.
+### Method: GET and POST 
 
-    Steps:
-        Reads the data using pandas.read_csv with custom parsing parameters.
+    Purpose: Generates visualizations of the processed data and displays them (results.html).
+    Accepts and stores user feedback via the form.
 
-        Applies preprocess_context to replace redacted blocks in the context column.
+    Implementation: 
 
-        Drops rows where any of processed_context, name, or split is missing.
+        Data Retrieval and Validation:
+            Retrieves incident data from the session.
+            Validates the presence of Date_Time and drops invalid rows.
+        
+        Data Clustering:
+            Converts the Nature field into numerical vectors using TfidfVectorizer.
+            Groups similar incidents into clusters using KMeans.
+            Reduces the data to two dimensions for plotting using PCA.
+        
+        Visualization Creation:
+            Scatter Plot:
+                Visualizes clusters of incidents, color-coded by cluster.
+            Bar Chart:
+                Shows the top 10 most frequent incident types.
+            Time Series Line Graph:
+                Displays the trend of incidents over time.
+        
+        Interactive Features:
+            Uses HoverTool to provide details (e.g., Nature, Cluster) when hovering over points.
+            Adds legends and dynamic resizing for better usability.
+        
+        Feedback Form:
+            Processes user feedback and displays a success message upon submission.
 
-    Result: A cleaned and preprocessed DataFrame.
 
+## Custom Functions
 
-## Data Splitting
+### fetchIncidents
 
-### split_data(data) 
+    Fetches data from a given URL using urllib.request.
 
-    Purpose: Splits the input data into two subsets:
+    Simulates browser-like behavior by setting headers.
 
-    Training Data: Used to train the model (split == 'training').
+    Returns the raw data (PDF binary) fetched from the URL.
 
-    Validation Data: Used to evaluate the model (split == 'validation').
-    
-    Implementation: Uses pandas filtering to create separate DataFrames for training 
-    and validation.
+### extractIncidents
 
+    Extracts structured data from PDF files using pypdf.
 
-## Balancing the Training Data
+    Parses the extracted text to retrieve details like Date_Time, Incident Number, Nature, etc.
 
-### balance_training_data(train_data)
+    Handles specific formats of police reports by skipping irrelevant rows (e.g., headers).
 
-    Purpose: Ensures the training data is balanced across all classes (names). Balancing avoids 
-    bias in the model towards more frequent names.
+    Returns a list of dictionaries, each representing an incident.
 
-    Steps:
-        Count Occurrences: Counts the number of samples for each name.
 
-        Undersampling: For each name, keeps only min_count samples (the smallest class size) by 
-        random sampling.
+## Data Flow
 
-        Shuffle: Shuffles the balanced dataset to avoid ordering bias.
+### Overview
 
+    Input Handling:
+        Users upload PDF files or provide URLs.
+        Files/URLs are processed to extract incident details.
 
-## Label Encoding
+    Data Processing:
+        Data is cleaned and transformed into a suitable format for clustering and visualization.
 
-### encode_labels(balanced_train_data, val_data)
+    Visualization:
+        Incidents are grouped into clusters, trends are plotted over time, and top incident types are shown in a bar chart.
 
-    Purpose:
-        Converts names (categorical labels) into numerical labels using LabelEncoder.
+    Feedback:
+        Users can submit feedback, which is logged in the console.
 
-        Ensures that the validation dataset only contains names present in the training 
-        dataset.
-
-    Steps:
-        Fits a LabelEncoder on the training names to encode them as integers.
-
-        Filters the validation data to include only known names.
-
-        Transforms the validation names using the same encoder.
-
-
-## Feature Vectorization
-
-### vectorize_texts(train_texts, val_texts)
-
-    Purpose: Converts the processed context text into numerical feature vectors using 
-    the TF-IDF (Term Frequency-Inverse Document Frequency) method.
-
-    Key Parameters:
-        ngram_range=(1, 2): Captures single words (unigrams) and consecutive 
-        word pairs (bigrams).
-
-        max_features=50000: Limits the number of features to 50,000.
-
-        min_df=1: A term must appear in at least one document to be included.
-
-        max_df=1.0: A term can appear in all documents.
-
-
-## Model Training
-
-### train_classifier(train_vectors, train_labels)
-
-    Purpose: Trains a Logistic Regression model on the training data.
-
-    Model Parameters:
-        penalty='l2': L2 regularization prevents overfitting by penalizing 
-        large weights.
-
-        solver='saga': Optimizer suitable for large datasets and sparse data.
-
-        max_iter=1000: Allows up to 1000 iterations to converge.
-
-
-## Model Evaluation
-
-### evaluate_model(clf, val_vectors, val_labels, label_encoder)
-
-    Purpose: Evaluates the model's performance on the validation set.
-
-    Steps:
-        Top-K Predictions: For each validation sample, retrieves the top-5 most probable 
-        predictions.
-
-        Binarized Labels: Converts both true labels and predictions into binary vectors 
-        for multi-class evaluation.
-
-        Metrics Computation: Uses precision_recall_fscore_support with average='micro' 
-        to compute precision, recall, and F1-score.
-
-
-## Test Data Handling
-
-### read_and_preprocess_test_data()
-
-    Purpose: Reads the test dataset from test.tsv and preprocesses the context 
-    column using preprocess_context.
-
-    Result: Returns a DataFrame with processed test data.
-
-
-### create_submission_file(clf, vectorizer, test_data, label_encoder)
-
-    Purpose: Uses the trained model to predict names for the test dataset.
-    Saves the predictions to a submission.tsv file.
-
-    Steps:
-        Transforms the test data using the same TF-IDF vectorizer.
-
-        Predicts the most likely name for each test context.
-
-        Writes the predictions (test IDs and names) to a TSV file.
-
-
-## Orchestration
-
-### unredactor()
-
-    Purpose: Orchestrates the entire pipeline by calling all helper functions in 
-    sequence.
-
-    Steps:
-        Reads and preprocesses the training data.
-
-        Splits the data into training and validation sets.
-
-        Balances the training data.
-
-        Encodes the labels.
-
-        Vectorizes the text data.
-
-        Trains a Logistic Regression classifier.
-
-        Evaluates the model on the validation set.
-
-        Reads and preprocesses the test data.
-
-        Generates predictions for the test set and saves them in a submission.tsv file.
-
-
-## Examples of Usage
-
--> Predict redacted names from the text context in declassified intelligence documents.
-
--> Predict names from redacted sections to aid investigations.
-
--> Predict patient names from context when approved by institutional policies.
 
 ## Bugs and Assumptions
 
