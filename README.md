@@ -24,6 +24,9 @@ The server will start at http://127.0.0.1:5000/
 
 Open a web browser and navigate to http://127.0.0.1:5000/
 
+On the home page, either upload one or more PDF files containing incident data or provide one or more URLs to the PDFs.
+Click the Submit button to process the data.
+
 ## Video Overview
 
 https://github.com/user-attachments/assets/34f1a6fa-f256-44a7-aa5d-9e6652887182
