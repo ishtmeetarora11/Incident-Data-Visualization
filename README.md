@@ -132,37 +132,70 @@ This file is the main entry point for the Norman PD Incident Visualization proje
         Users can submit feedback, which is logged in the console.
 
 
+## Index.html
+
+### Overview
+
+    Purpose:
+        Serves as the home page where users can upload PDF files or enter URLs to fetch incident data.
+
+    Structure:
+        Header:
+            Displays the title "Norman PD Incident Visualization."
+
+    Form:
+        Allows users to:
+            Upload one or more PDF files via an input field (type="file", multiple).
+            Enter one or more PDF URLs via a text input field.
+            Uses POST method to send data to the / route.
+            Includes an enctype="multipart/form-data" attribute to handle file uploads properly.
+
+
+## Results.html
+
+### Overview
+
+    Purpose:
+        Displays the visualizations created from the incident data and collects user feedback.
+
+    Structure:
+        Header:
+            Displays the title "Incident Visualizations."
+        Visualization Section:
+            Renders Bokeh visualizations dynamically using Flask variables (script and div).
+            If no visualizations are available, it shows an error message.
+        Feedback Form:
+            Allows users to submit feedback via a textarea.
+            Includes a POST form targeting the /results route.
+            If feedback is successfully submitted, it shows a success message.          
+
+
 ## Bugs and Assumptions
 
 ### Assumptions
 
--> Works on unseen test data by leveraging context and uses sparse matrices and efficient algorithms for large datasets.
+-> The app only processes files with the .pdf extension. If a user uploads a non-PDF file or an incorrectly formatted PDF, the app may fail silently or crash.
 
--> Logistic Regression works efficiently with sparse data and large feature spaces. It uses linear functions that are computationally less expensive compared to tree-based methods like Random Forest.
+-> If the uploaded files or fetched URLs do not contain valid incident data, the app redirects to the results page but shows a generic error message.
 
--> Logistic Regression models linear decision boundaries, which are often sufficient for text classification tasks. It fits a weighted sum of features to predict class probabilities.
+-> The extractIncidents function assumes a specific structure for the incident PDF files. If the format changes, the extraction logic may fail or produce incorrect results.
 
--> The L2 regularization used in Logistic Regression is sufficient to prevent overfitting.
+-> If clustering fails (e.g., due to insufficient data), the scatter plot generation will throw an exception.
 
--> TF-IDF provides sufficient feature representation for the classification task.
+-> The feedback form does not validate the input, allowing users to submit empty or nonsensical feedback.
+
+-> The number of clusters for KMeans is fixed at 4 (n_clusters=4), assuming that this is an appropriate number for the dataset.
 
 
 ## Test Cases
 
-### test_preprocess_context_basic.py
+### test_extract_data.py
 
-test_basic_redaction: Tests the function's ability to replace a single redacted block (█) 
-with <redacted> in a typical sentence containing multiple redactions.
+This test case verifies the functionality of the extractIncidents function. 
+It fetches a sample PDF file from a provided URL using urllib.request and extracts incident data using the extractIncidents function. 
+The test asserts that the first incident's Date_Time field matches the expected value (10/31/2024 11:44), ensuring the parsing logic accurately processes the provided PDF data.
 
-test_multiple_redactions: Validates the function's ability to handle sentences with multiple 
-redacted blocks of varying lengths.
+### test_fetch_data.py
 
-test_no_redactions: Ensures the function does not alter input text when no redacted blocks are present.
-
-### test_read_and_preprocess_data_basic.py
-
-test_read_and_preprocess_data: Verifies that the function Reads a properly formatted TSV file, Applies the preprocess_context function to the context column, Returns a DataFrame with all required columns and preprocessed content.
-
-### test_split_data_only_validation.py
-
-test_split_data_only_validation: Verifies that the function correctly handles a dataset containing only validation samples.
+This test case validates the fetchIncidents function by mocking urllib.request.urlopen to simulate an HTTP response without making a real network call. 
+It ensures that the function correctly constructs a Request object with the given URL and headers, and properly reads and returns the response (b"Ishtmeet"). This confirms the function's ability to fetch data from a URL as expected.
