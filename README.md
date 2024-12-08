@@ -170,6 +170,46 @@ This file is the main entry point for the Norman PD Incident Visualization proje
             If feedback is successfully submitted, it shows a success message.          
 
 
+## Graphs in the Norman PD Incident Visualization Project
+
+### Scatterplot
+
+    Purpose:
+        Groups similar incidents based on the "Nature" field to identify patterns or common types of incidents.
+
+    Features:
+        Each point represents an incident, and the color corresponds to its cluster.
+        Hover over points to see details like the "Nature" and assigned cluster.
+        A legend indicates the cluster numbers.
+
+    Insights:
+        Helps visualize patterns or trends in incident types (e.g., identifying recurring or related incidents).
+
+### Bar Chart: Incident Count by Nature
+
+    Purpose:
+        Displays the top 10 most frequent types of incidents.
+
+    Features:
+        Hover over bars to view the exact count for each type.
+        Incident names are displayed along the x-axis for clarity.
+
+    Insights:
+        Highlights the most common types of incidents, helping prioritize focus areas for public safety.
+
+### Line Graph: Incidents Over Time
+
+    Purpose:
+        Shows how the number of incidents varies over time, helping to identify temporal patterns.
+
+    Features:
+        Each data point represents a day's total incidents, connected by a line for trends.
+        Hover over points to see the exact date and number of incidents.
+
+    Insights:
+        Reveals trends like peaks on specific days or consistent patterns over time.
+
+
 ## Bugs and Assumptions
 
 ### Assumptions
