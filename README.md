@@ -1,7 +1,3 @@
-# cis6930fa24-project3
-
-Name: Ishtmeet Singh Arora
-
 ## Project Description
 The Norman PD Incident Visualization project is a web application designed to visualize police incident data extracted from PDF files or URLs. Users can upload PDF files or provide URLs to PDF documents containing incident reports. The application processes these inputs, extracting incident details such as date, location, and nature of the incidents using text extraction techniques. It then clusters similar incidents using machine learning (KMeans) and displays interactive visualizations built with Bokeh.
 
